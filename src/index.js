@@ -75,6 +75,8 @@ function onSet(groupName, options) {
 
   setGumrcInfo(finalGumrcInfo, (err) => {
     if (err) {
+      // Display an error message to the user
+      printer(err, 'red');
       return process.exit(1);
     }
     printer(`Set ${groupName} group success`, 'green');
