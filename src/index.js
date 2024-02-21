@@ -45,7 +45,7 @@ function onList() {
   const tableData = getPrintTableData(allConfig);
 
   // currently used user info
-  printer(`Currently used name=${using.name} email=${using.email}`, 'yellow');
+  printer(['Currently used name=', using.name, ' email=', using.email], ['yellow', 'green', 'yellow', 'green']);
 
   // git user config group list
   const pt = new Table();
@@ -115,7 +115,8 @@ function onUse(groupName, options) {
       printer(`Global using name=${globalGitUser.name} email=${globalGitUser.email}`, 'green');
     }
 
-    printer(`Currently used name=${using.name} email=${using.email}`, 'yellow');
+    // printer(`Currently used name=${using.name} email=${using.email}`, 'yellow');
+    printer(['Currently used name=', using.name, ' email=', using.email], ['yellow', 'green', 'yellow', 'green']);
     console.log(' ');
   } else {
     printer(`${groupName} is invalid group name`, 'red');

@@ -4,6 +4,7 @@ const ini = require('ini');
 const merge = require('lodash/merge');
 const gitConfigPath = require('git-config-path');
 const parse = require('parse-git-config');
+const chalk = require('chalk');
 
 const GUMRC = path.join(process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME'], '.gumrc');
 
@@ -15,6 +16,7 @@ function setGumrcInfo(finalGumrcInfo, callback) {
   fs.writeFile(GUMRC, ini.encode(finalGumrcInfo), callback);
 }
 
+// 获取全部的用户配置（将全局git config 与 gumrc 配置合并）
 function getAllConfigInfo() {
   const globalInfo = getGlobalGitUserConfig();
   const currentGumrcInfo = getGumrcInfo();
@@ -59,15 +61,33 @@ function getPrintTableData(data) {
 // https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
 function printer(val, color) {
   const colorMap = {
-    red: '\x1b[31m',
-    yellow: '\x1b[33m',
-    green: '\x1b[32m',
-    cyan: '\x1b[36m',
-    white: '\x1b[37m',
+    red: chalk.red,
+    yellow: chalk.yellow,
+    green: chalk.green,
+    cyan: chalk.cyan,
+    white: chalk.white,
   };
 
+  let colorfulLog = '';
+
+  if (Array.isArray(val)) {
+    val.forEach((v, i) => {
+      colorfulLog += getColorChalk(i)(v);
+    })
+  } else {
+    colorfulLog = getColorChalk(0)(val);
+  }
+
   console.log(' ');
-  console.log(`${colorMap[color]}%s\x1b[0m`, val);
+  console.log(colorfulLog);
+
+  function getColorChalk(i) {
+    if (Array.isArray(color)) {
+      return colorMap[color[i]];
+    } else {
+      return colorMap[color];
+    }
+  }
 }
 
 module.exports = {
